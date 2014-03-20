@@ -1,0 +1,37 @@
+zh-TW:
+  activerecord:
+    models:
+      user: "帳號"
+    attributes:
+      user:
+        email: "電子信箱"
+        password: "密碼"
+        password_confirmation: "確認密碼"
+        current_password: "原密碼"
+        remember_me: "記住我"
+
+  deviseview:
+    signin: "登入"
+    signup: "申請帳號"
+    signout: "登出"
+    forgotpasswd: "忘記密碼"
+    reconfirm: "重寄確認信件"
+    reunlock: "重寄解鎖信件"
+    signingwith: "以 %{provider} 登入"
+    sendoutresetmail: "送出密碼重設信件"
+
+    # 注意後方緊連文字
+    edittext: "編輯"
+
+    updatetext: "更新"
+    waitingconfirm: "等待驗證中："
+    passwdchangehint:
+      leaveblank: "如果不更改請留空"
+      currentpasswd: "請輸入原密碼以確認身分"
+    canceluser:
+      cancel: "取消帳號"
+      desc: "不需要了?"
+      confirm: "確定要取消帳號?"
+    backtext: "上一頁"
+
+  hello: "Hello world"

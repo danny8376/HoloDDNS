@@ -1,0 +1,45 @@
+h2
+  = "#{t :'deviseview.edittext'}#{resource.class.model_name.human}"
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+  = devise_error_messages!
+
+  div
+    = f.label :email
+    br
+    = f.email_field :email, autofocus: true
+
+  - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+    div
+      = "#{t :'deviseview.waitingconfirm'} #{resource.unconfirmed_email}"
+
+  div
+    = f.label :password
+    i<
+      = t :'deviseview.passwdchangehint.leaveblank'
+    br
+    = f.password_field :password, autocomplete: "off"
+
+  div
+    = f.label :password_confirmation
+    br
+    = f.password_field :password_confirmation, autocomplete: "off"
+
+  div
+    = f.label :current_password
+    i<
+      = t :'deviseview.passwdchangehint.currentpasswd'
+    br
+    = f.password_field :current_password, autocomplete: "off"
+
+  div
+    = f.submit t :'deviseview.updatetext'
+
+h3
+  = t :'deviseview.canceluser.cancel'
+
+p
+  = t :'deviseview.canceluser.desc'
+  = button_to t(:'deviseview.canceluser.cancel'), registration_path(resource_name), data: { confirm: t(:'deviseview.canceluser.confirm') }, method: :delete
+
+= link_to t(:'deviseview.backtext'), :back
