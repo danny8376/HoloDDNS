@@ -43,3 +43,10 @@ body
     - if alert
       p.alert.alert-warning = alert
     == yield
+  footer
+    div.container
+      | HoloDDNS By DannyAAM @_@
+      div.pull-right
+        select#locale
+          option value="zh-TW" selected=(current_locale? :"zh-TW") 繁體中文
+          option value="en" selected=(current_locale? :en) English(US)

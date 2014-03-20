@@ -12,6 +12,9 @@ gem 'pg', :group => :production
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'
 
+# Compass
+#gem 'compass-rails', '~> 1.1.7'
+
 # Bootstrap
 gem 'bootstrap-sass', '~> 3.1.1'
 

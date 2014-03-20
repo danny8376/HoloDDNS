@@ -14,7 +14,34 @@
 @import "bootstrap";
 @import "bootstrap/theme";
 
+$footer_height:     40px;
+
+html {
+    min-height:     100%;
+}
+
 body {
     padding-top:    70px;
-    padding-bottom: 30px;
+    padding-bottom: $footer_height;
+}
+
+footer {
+    position:       absolute;
+    bottom:         0;
+    width:          100%;
+    height:         $footer_height;
+    background:     #f5f5f5;
+
+    .container {
+        position:       relative;
+        text-align:     center;
+        margin:         10px auto;
+
+        .pull-right {
+            position:       absolute;
+            right:          0;
+            top:            0;
+            margin:         0 25px;
+        }
+    }
 }

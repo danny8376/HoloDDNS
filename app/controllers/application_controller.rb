@@ -7,8 +7,11 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  alias user_root_path records_path
+
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    locale = params[:locale]
+    I18n.locale = (locale and I18n.available_locales.include? locale.to_sym) ? locale : I18n.default_locale
   end
 
 
