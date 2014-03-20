@@ -18,13 +18,13 @@ body
           span.icon-bar
           span.icon-bar
           span.icon-bar
-        = link_to "Holo DDns", "/", :class => 'navbar-brand'
+        = link_to "Holo DDns", root_path, :class => 'navbar-brand'
       div.collapse.navbar-collapse#none
         ul.nav.navbar-nav#nav
           li class=(nav_active "index")
-            = link_to "Home", "/"
+            = link_to "Home", root_path
           li class=(nav_active "records")
-            = link_to "DNS Record", "/records"
+            = link_to "DNS Record", records_path
         p.navbar-text.pull-right
           - if user_signed_in?
             | Hello, 
