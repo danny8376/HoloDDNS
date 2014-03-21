@@ -3,10 +3,13 @@ class RecordsController < ApplicationController
 
   before_filter :authenticate_user!
 
+  include RecordsLib
+
   # GET /records
   # GET /records.json
   def index
     @records = Record.all
+    @dns_recs = query_dns @records
   end
 
   # GET /records/1

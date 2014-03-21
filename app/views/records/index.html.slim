@@ -19,3 +19,8 @@ table
 br
 
 = link_to 'New Record', new_record_path
+
+pre
+  - @dns_recs.each do |r|
+    = r.inspect
+    br
