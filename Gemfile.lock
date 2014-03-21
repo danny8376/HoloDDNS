@@ -47,7 +47,9 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    connection_pool (2.0.0)
     daemons (1.1.9)
+    dalli (2.7.0)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -157,6 +159,8 @@ PLATFORMS
 DEPENDENCIES
   bootstrap-sass (~> 3.1.1)
   coffee-rails (~> 4.0.0)
+  connection_pool
+  dalli
   devise (~> 3.2.4)
   em-postgresql-adapter!
   em-synchrony

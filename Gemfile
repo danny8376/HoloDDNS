@@ -46,6 +46,7 @@ gem 'rack-fiber_pool', :require => 'rack/fiber_pool'
 #gem 'em-http-request'
 gem 'em-synchrony', :require => ['em-synchrony',
 #                                 'em-synchrony/em-http',
+                                 'em-synchrony/em-memcache',
                                  'em-synchrony/activerecord']
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -73,3 +74,9 @@ gem 'thin'
 
 # RubyDNS
 gem 'rubydns'
+
+# Dalli for session with memcache
+gem 'dalli'
+
+# Dalli with fiber settings
+gem 'connection_pool'
