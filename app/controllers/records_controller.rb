@@ -10,6 +10,7 @@ class RecordsController < ApplicationController
   def index
     @records = Record.all
     @dns_recs = query_dns @records
+    @recs = @dns_recs.map{|r| RecordWrapper.new r}.reject{|r| r.type == :UNKNOWN}
   end
 
   # GET /records/1
