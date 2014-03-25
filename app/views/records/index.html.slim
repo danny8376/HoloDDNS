@@ -1,26 +1,39 @@
 h1 Listing records
 
-table
-  tr
-    th User
-    th Domain
-    th
-    th
-    th
+= link_to 'New Record', new_record_path, :class => 'btn btn-primary btn-lg', :id => 'new-rec'
 
-  - @records.each do |record|
+table.table
+  tr
+    th Domain
+    th Type
+    th Value
+    th
+    /th
+    /th
+
+  - @recs.each do |r|
+    tr
+      td = r.domain
+      td = r.type
+      td = r.value.to_s
+      /td = link_to 'Show', record_path(r.id, r.hash)
+      /td = link_to 'Edit', edit_record_path(r)
+      /td = link_to 'Destroy', r, data: {:confirm => 'Are you sure?'}, :method => :delete
+      td = link_to 'Destroy', {controller: 'records', action: 'destroy', id: r.id, hash: r.hash}, method: :delete, data: {:confirm => 'Are you sure?'}
+
+  /- @records.each do |record|
     tr
       td = record.user_id
       td = record.domain
-      td = link_to 'Show', record
-      td = link_to 'Edit', edit_record_path(record)
-      td = link_to 'Destroy', record, data: {:confirm => 'Are you sure?'}, :method => :delete
+      /td = link_to 'Show', record
+      /td = link_to 'Edit', edit_record_path(record)
+      /td = link_to 'Destroy', record, data: {:confirm => 'Are you sure?'}, :method => :delete
 
-br
+/br
 
-= link_to 'New Record', new_record_path
+/= link_to 'New Record', new_record_path
 
-pre
-  - @dns_recs.each do |r|
-    = r.inspect
+/pre
+  - @recs.each do |r|
+    = "#{r.hash} #{r.inspect}"
     br

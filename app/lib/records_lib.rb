@@ -7,6 +7,8 @@ module RecordsLib
     # record current fiber
     f = Fiber.current
 
+    records = [records] if Record === records
+
     #resolver = RubyDNS::Resolver.new( [ [:udp, "127.0.0.1", 53] ] )
     resolver = RubyDNS::Resolver.new( [ [:tcp, "127.0.0.1", 53] ] )
 
@@ -15,6 +17,7 @@ module RecordsLib
     answers = []
 
     alldone = lambda do
+      answers.sort!
       f.resume(answers)
     end
 
@@ -22,7 +25,7 @@ module RecordsLib
       resolver.query(rec.domain, Resolv::DNS::Resource::IN::ANY) do |response|
         count += 1
         if response.is_a? RubyDNS::Message and response.rcode == Resolv::DNS::RCode::NoError
-          answers += response.answer
+          answers += response.answer.map{|r| RecordWrapper.new rec.id, r}
         end
         alldone.call if count == length
       end
@@ -35,8 +38,9 @@ module RecordsLib
 
   # ==== Class to wrap record
   class RecordWrapper
-    attr_reader :domain, :ttl, :type, :value
-    def initialize record
+    attr_reader :id, :domain, :ttl, :type, :value
+    def initialize rid, record
+      @id = rid
       @domain = record[0].to_s
       @ttl = record[1]
       @type = type_to_symbol record[2]
@@ -84,6 +88,19 @@ module RecordsLib
     def hash
       hash_base = "#{@domain.downcase}|#{@type.to_s.upcase}|#{@value.inspect}"
       Base64.urlsafe_encode64(Digest::MD5.digest(hash_base)[4...10])
+    end
+
+    def <=> o
+      return nil unless self.class === o
+      s = @domain <=> o.domain
+      return s unless s == 0
+      s = @type <=> o.type
+      return s unless s == 0
+      return @value <=> o.value
+    end
+
+    def self.model_name
+      Record.model_name
     end
   end
 end

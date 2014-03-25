@@ -1,5 +1,13 @@
 Holoddns::Application.routes.draw do
-  resources :records
+  #resources :records
+
+  # Records
+  get '/records(.:format)', to: 'records#index', as: :records
+  post '/records(.:format)', to: 'records#create'
+  get '/records/new(.:format)', to: 'records#new', as: :new_record
+  delete '/records/:id/:hash(.:format)', to: 'records#destroy'
+  # May not need ?
+  #get '/records/:id/:hash(.:format)', to: 'records#show', as: :record
 
   devise_for :users
 

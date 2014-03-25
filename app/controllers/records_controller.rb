@@ -9,27 +9,27 @@ class RecordsController < ApplicationController
   # GET /records.json
   def index
     records = current_user.records
-    @recs = query_dns(records).map{|r| RecordWrapper.new r}.reject{|r| r.type == :UNKNOWN}
+    @recs = query_dns(records).reject{|r| r.type == :UNKNOWN}
   end
 
   # GET /records/1
   # GET /records/1.json
-  def show
-  end
+  #def show
+  #end
 
   # GET /records/new
   def new
-    @record = Record.new
+    #@record = Record.new
   end
 
   # GET /records/1/edit
-  def edit
-  end
+  #def edit
+  #end
 
   # POST /records
   # POST /records.json
   def create
-    @record = Record.new(record_params)
+    @record = current_user.create(record_params)
 
     respond_to do |format|
       if @record.save
@@ -44,22 +44,23 @@ class RecordsController < ApplicationController
 
   # PATCH/PUT /records/1
   # PATCH/PUT /records/1.json
-  def update
-    respond_to do |format|
-      if @record.update(record_params)
-        format.html { redirect_to @record, notice: 'Record was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @record.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  #def update
+  #  respond_to do |format|
+  #    if @record.update(record_params)
+  #      format.html { redirect_to @record, notice: 'Record was successfully updated.' }
+  #      format.json { head :no_content }
+  #    else
+  #      format.html { render action: 'edit' }
+  #      format.json { render json: @record.errors, status: :unprocessable_entity }
+  #    end
+  #  end
+  #end
 
   # DELETE /records/1
   # DELETE /records/1.json
   def destroy
-    @record.destroy
+    recs = query_dns(@record)
+    @record.destroy if recs.size == 1
     respond_to do |format|
       format.html { redirect_to records_url }
       format.json { head :no_content }
@@ -69,11 +70,11 @@ class RecordsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_record
-      @record = Record.find(params[:id])
+      @record = current_user.records.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def record_params
-      params.require(:record).permit(:user_id, :domain)
+      params.require(:record).permit(:domain, :type, :value)
     end
 end
