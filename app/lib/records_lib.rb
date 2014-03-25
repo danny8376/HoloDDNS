@@ -29,7 +29,7 @@ module RecordsLib
     end
 
     # setup finished, pause current fiber & wait callback to resume
-    Fiber.yield
+    records.empty? ? [] : Fiber.yield
   end
 
 
