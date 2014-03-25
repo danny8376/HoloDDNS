@@ -41,8 +41,9 @@ gem 'turbolinks'
 
 # async wrappers
 gem 'eventmachine'
-gem 'em-postgresql-adapter', :group => :production, :git => 'git://github.com/leftbee/em-postgresql-adapter.git'
+gem 'em-postgresql-adapter', :group => :production, :github => 'leftbee/em-postgresql-adapter'
 gem 'rack-fiber_pool', :require => 'rack/fiber_pool'
+gem 'em-smtp', :github => 'danny8376/em-smtp'
 #gem 'em-http-request'
 gem 'em-synchrony', :require => ['em-synchrony',
 #                                 'em-synchrony/em-http',

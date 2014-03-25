@@ -20,6 +20,8 @@ module Holoddns
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :'zh-TW'
 
+    config.action_mailer.delivery_method = :em_smtp
+
     config.cache_store = :dalli_store, 'localhost',
       { :namespace => 'rails_holoddns', :expires_in => 1.day, :pool_size => 10 }
   end
