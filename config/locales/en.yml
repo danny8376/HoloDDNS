@@ -44,4 +44,13 @@ en:
       confirm: "Are you sure?"
     backtext: "Back"
 
+  mainview:
+    home: "Home"
+    record: "DNS Records"
+
+  indexview:
+    desc: "Well ... , just a experimental service ?"
+    go: "Try it!"
+
+
   hello: "Hello world"

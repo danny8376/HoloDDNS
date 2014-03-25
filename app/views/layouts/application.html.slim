@@ -22,9 +22,9 @@ body
       div.collapse.navbar-collapse#none
         ul.nav.navbar-nav#nav
           li class=(nav_active "index")
-            = link_to "Home", root_path
+            = link_to t(:'mainview.home'), root_path
           li class=(nav_active "records")
-            = link_to "DNS Record", records_path
+            = link_to t(:'mainview.record'), records_path
         p.navbar-text.pull-right
           - if user_signed_in?
             | Hello, 

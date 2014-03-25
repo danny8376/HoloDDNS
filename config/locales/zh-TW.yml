@@ -34,4 +34,13 @@ zh-TW:
       confirm: "確定要取消帳號?"
     backtext: "上一頁"
 
+  mainview:
+    home: "首頁"
+    record: "DNS記錄"
+
+  indexview:
+    desc: "嗯 ... , 大概就一個亂玩的東西吧 ?"
+    go: "試玩去~"
+
+
   hello: "Hello world"
