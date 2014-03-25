@@ -7,7 +7,9 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  alias user_root_path records_path if defined? :records_path and not defined? :user_root_path
+  def user_root_path
+    records_path if defined? :records_path
+  end
 
   def set_locale
     locale = params[:locale]
