@@ -1,45 +1,43 @@
-h2
-  #{t :'deviseview.edittext'}#{resource.class.model_name.human}
+div.mainbox.col-md-6.col-md-offset-3.col-sm-8.col-sm-offset-2
+  div.panel.panel-info
+    div.panel-heading
+      div.panel-title
+        #{t :'deviseview.edittext'}#{resource.class.model_name.human}
+      div.pull-right.devise-links
+        = link_to t(:'deviseview.backtext'), :back
 
-= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
-  = devise_error_messages!
+    div.panel-body
+      = devise_error_messages!
+      = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'form-horizontal', role: 'form' }) do |f|
 
-  div
-    = f.label :email
-    br
-    = f.email_field :email, autofocus: true
+        = f.label :email, class: 'control-label'
+        = f.email_field :email, autofocus: true, class: 'form-control', required: true
 
-  - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-    div
-      #{t :'deviseview.waitingconfirm'} #{resource.unconfirmed_email}
+        - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+          #{t :'deviseview.waitingconfirm'} #{resource.unconfirmed_email}
 
-  div
-    = f.label :password
-    i<
-      = t :'deviseview.passwdchangehint.leaveblank'
-    br
-    = f.password_field :password, autocomplete: "off"
+        = f.label :password, class: 'control-label'
+        i<
+          = t :'deviseview.passwdchangehint.leaveblank'
+        = f.password_field :password, autocomplete: "off", class: 'form-control'
 
-  div
-    = f.label :password_confirmation
-    br
-    = f.password_field :password_confirmation, autocomplete: "off"
+        = f.label :password_confirmation, class: 'control-label'
+        = f.password_field :password_confirmation, autocomplete: "off", class: 'form-control'
 
-  div
-    = f.label :current_password
-    i<
-      = t :'deviseview.passwdchangehint.currentpasswd'
-    br
-    = f.password_field :current_password, autocomplete: "off"
+        = f.label :current_password, class: 'control-label'
+        i<
+          = t :'deviseview.passwdchangehint.currentpasswd'
+        = f.password_field :current_password, autocomplete: "off", class: 'form-control', required: true
 
-  div
-    = f.submit t :'deviseview.updatetext'
+        div.form-actions
+          = f.submit t(:'deviseview.updatetext'), class: 'btn btn-info'
 
-h3
-  = t :'deviseview.canceluser.cancel'
+  hr
 
-p
-  = t :'deviseview.canceluser.desc'
-  = button_to t(:'deviseview.canceluser.cancel'), registration_path(resource_name), data: { confirm: t(:'deviseview.canceluser.confirm') }, method: :delete
-
-= link_to t(:'deviseview.backtext'), :back
+  div.panel.panel-danger
+    div.panel-heading
+      div.panel-title
+        = t :'deviseview.canceluser.cancel'
+    div.panel-body
+      = t :'deviseview.canceluser.desc'
+      = button_to t(:'deviseview.canceluser.cancel'), registration_path(resource_name), data: { confirm: t(:'deviseview.canceluser.confirm') }, method: :delete, class: 'btn btn-default btn-xs'

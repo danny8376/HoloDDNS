@@ -1,3 +1,20 @@
+.field_with_errors {
+}
+
+.form-actions {
+    padding-top:        15px;
+}
+
+.devise-links {
+    margin-top:         -20px;
+    font-size:          0.8em;
+}
+
+
+
+
+// disable all default scaffold styles OwO
+/*
 body {
   background-color: #fff;
   color: #333;
@@ -20,11 +37,9 @@ pre {
 
 a {
   color: #000;
-  /*
   &:visited {
     color: #666;
   }
-  */
   &:hover {
     color: #fff;
     background-color: #000;
@@ -69,3 +84,4 @@ div {
     list-style: square;
   }
 }
+*/

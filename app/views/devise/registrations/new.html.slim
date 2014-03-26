@@ -1,25 +1,22 @@
-h2
-  = t :'deviseview.signup'
+div.mainbox.col-md-6.col-md-offset-3.col-sm-8.col-sm-offset-2
+  div.panel.panel-info
+    div.panel-heading
+      div.panel-title
+        = t :'deviseview.signup'
+      div.pull-right.devise-links
+        == render "devise/shared/links"
 
-= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-  = devise_error_messages!
+    div.panel-body
+      = devise_error_messages!
+      = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal', role: 'form' }) do |f|
+        = f.label :email, class: 'control-label'
+        = f.email_field :email, autofocus: true, class: 'form-control', required: true
 
-  div
-    = f.label :email
-    br
-    = f.email_field :email, autofocus: true
+        = f.label :password, class: 'control-label'
+        = f.password_field :password, autocomplete: "off", class: 'form-control', required: true
 
-  div
-    = f.label :password
-    br
-    = f.password_field :password, autocomplete: "off"
+        = f.label :password_confirmation, class: 'control-label'
+        = f.password_field :password_confirmation, autocomplete: "off", class: 'form-control', required: true
 
-  div
-    = f.label :password_confirmation
-    br
-    = f.password_field :password_confirmation, autocomplete: "off"
-
-  div
-    = f.submit t :'deviseview.signup'
-
-== render "devise/shared/links"
+        div.form-actions
+          = f.submit t(:'deviseview.signup'), class: 'btn btn-info'
