@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/danny8376/em-smtp.git
-  revision: 7d564d96e856373b0c3107b95a1decfe7862fec1
-  specs:
-    em-smtp (0.0.1)
-      actionmailer
-      eventmachine
-      mail
-
-GIT
   remote: git://github.com/leftbee/em-postgresql-adapter.git
   revision: 3dfcc60378e961fca48dd4dcdc930a368a5d052d
   specs:
@@ -66,6 +57,10 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     dnsruby (1.54)
+    em-smtp (0.0.1)
+      actionmailer
+      eventmachine
+      mail
     em-synchrony (1.0.3)
       eventmachine (>= 1.0.0.beta.1)
     erubis (2.7.0)
@@ -174,7 +169,7 @@ DEPENDENCIES
   devise (~> 3.2.4)
   dnsruby
   em-postgresql-adapter!
-  em-smtp!
+  em-smtp
   em-synchrony
   eventmachine
   jbuilder (~> 1.2)

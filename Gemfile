@@ -43,7 +43,7 @@ gem 'turbolinks'
 gem 'eventmachine'
 gem 'em-postgresql-adapter', :group => :production, :github => 'leftbee/em-postgresql-adapter'
 gem 'rack-fiber_pool', :require => 'rack/fiber_pool'
-gem 'em-smtp', :github => 'danny8376/em-smtp'
+gem 'em-smtp'#, :github => 'danny8376/em-smtp'
 #gem 'em-http-request'
 gem 'em-synchrony', :require => ['em-synchrony',
 #                                 'em-synchrony/em-http',
