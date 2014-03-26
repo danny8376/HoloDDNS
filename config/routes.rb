@@ -8,6 +8,7 @@ Holoddns::Application.routes.draw do
   delete '/records/:id/:hash(.:format)', to: 'records#destroy'
   # May not need ?
   #get '/records/:id/:hash(.:format)', to: 'records#show', as: :record
+  get '/records/:id(.:format)', to: 'records#show', as: :record
 
   devise_for :users
 

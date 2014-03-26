@@ -14,12 +14,12 @@ class RecordsController < ApplicationController
 
   # GET /records/1
   # GET /records/1.json
-  #def show
-  #end
+  def show
+  end
 
   # GET /records/new
   def new
-    #@record = Record.new
+    @record = Record.new
   end
 
   # GET /records/1/edit
@@ -29,7 +29,7 @@ class RecordsController < ApplicationController
   # POST /records
   # POST /records.json
   def create
-    @record = current_user.create(record_params)
+    @record = current_user.records.create(record_params)
 
     respond_to do |format|
       if @record.save
