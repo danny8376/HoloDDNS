@@ -76,6 +76,9 @@ gem 'thin'
 # RubyDNS
 gem 'rubydns'
 
+# DnsRuby <= just used for nsupdate...
+gem 'dnsruby'
+
 # Dalli for session with memcache
 gem 'dalli'
 

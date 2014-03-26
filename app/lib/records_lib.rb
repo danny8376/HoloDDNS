@@ -2,15 +2,20 @@ require 'digest'
 require 'base64'
 
 module RecordsLib
-  # with block
+
+  protected
+
+
+  # Do DNS Query
   def query_dns records
     # record current fiber
     f = Fiber.current
 
     records = [records] if Record === records
 
-    #resolver = RubyDNS::Resolver.new( [ [:udp, "127.0.0.1", 53] ] )
-    resolver = RubyDNS::Resolver.new( [ [:tcp, "127.0.0.1", 53] ] )
+    return [] if records.empty?
+
+    resolver = RubyDNS::Resolver.new [ [:udp, "127.0.0.1", 53], [:tcp, "127.0.0.1", 53] ]
 
     length = records.size
     count = 0
@@ -32,12 +37,69 @@ module RecordsLib
     end
 
     # setup finished, pause current fiber & wait callback to resume
-    records.empty? ? [] : Fiber.yield
+    Fiber.yield
   end
+
+  # Do NSUPDATE
+  # record => [ :method, domain, arg1, arg2, ... ]
+  # records => [ record1, record2, ... ]
+  def update_dns records
+    f = Fiber.current
+
+    zone = get_zone records[0][1]
+    return false unless zone
+
+    update = Dnsruby::Update.new zone
+
+    records.each do |rec|
+      return false unless rec[1].end_with? zone
+      update.send *rec
+    end
+
+    update.set_tsig *BIND_UPDATE_KEY
+
+    EventMachine.connect 'localhost', 53, NSUpdateConn, update.encode, proc { |response|
+      f.resume response.rcode == Dnsruby::RCode::NOERROR
+    }
+
+    Fiber.yield
+  end
+
+  def get_zone record
+    AVAILABLE_DOMAINS.each { |domain| return domain if record.end_with? domain }
+    return nil
+  end
+
+
+
+
+  class NSUpdateConn < EventMachine::Connection
+    def initialize query, callback
+      @query, @callback = query, callback
+    end
+
+    def post_init
+      send_data [@query.bytesize, @query].pack('na*')
+    end
+
+    def receive_data data
+      answer = data.unpack('na*')
+      if answer[1].bytesize == answer[0]
+        @callback.call Dnsruby::Message.decode answer[1]
+      else
+        @callback.call nil
+      end
+    end
+  end
+
+
+
 
 
   # ==== Class to wrap record
   class RecordWrapper
+    IN = Resolv::DNS::Resource::IN
+    
     attr_reader :id, :domain, :ttl, :type, :value
     def initialize rid, record
       @id = rid
@@ -49,19 +111,19 @@ module RecordsLib
 
     def type_to_symbol record
       case record
-      when Resolv::DNS::Resource::IN::A
+      when IN::A
         :A
-      when Resolv::DNS::Resource::IN::AAAA
+      when IN::AAAA
         :AAAA
-      when Resolv::DNS::Resource::IN::CNAME
+      when IN::CNAME
         :CNAME
-      when Resolv::DNS::Resource::IN::NS
+      when IN::NS
         :NS
-      when Resolv::DNS::Resource::IN::MX
+      when IN::MX
         :MX
-      when Resolv::DNS::Resource::IN::TXT
+      when IN::TXT
         :TXT
-      when Resolv::DNS::Resource::IN::SRV
+      when IN::SRV
         :SRV
       else
         :UNKNOWN
@@ -70,15 +132,15 @@ module RecordsLib
 
     def extract_val record
       case record
-      when Resolv::DNS::Resource::IN::A, Resolv::DNS::Resource::IN::AAAA
+      when IN::A, IN::AAAA
         record.address.to_s
-      when Resolv::DNS::Resource::IN::CNAME, Resolv::DNS::Resource::IN::NS
+      when IN::CNAME, IN::NS
         record.name.to_s
-      when Resolv::DNS::Resource::IN::MX
+      when IN::MX
         [record.preference, record.exchange.to_s].inspect
-      when Resolv::DNS::Resource::IN::TXT
+      when IN::TXT
         record.strings.inspect
-      when Resolv::DNS::Resource::IN::SRV
+      when IN::SRV
         [record.priority, record.weight, record.port, record.target.to_s].inspect
       else
         nil
@@ -104,3 +166,4 @@ module RecordsLib
     end
   end
 end
+

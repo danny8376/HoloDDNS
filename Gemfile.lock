@@ -65,6 +65,7 @@ GEM
       railties (>= 3.2.6, < 5)
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    dnsruby (1.54)
     em-synchrony (1.0.3)
       eventmachine (>= 1.0.0.beta.1)
     erubis (2.7.0)
@@ -171,6 +172,7 @@ DEPENDENCIES
   connection_pool
   dalli
   devise (~> 3.2.4)
+  dnsruby
   em-postgresql-adapter!
   em-smtp!
   em-synchrony

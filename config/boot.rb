@@ -3,6 +3,8 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 
 require 'bundler/setup' if File.exist?(ENV['BUNDLE_GEMFILE'])
 
+# secrets ?
+require './config/secrets'
 
 # some rails modification
 require 'rails/commands/server'
