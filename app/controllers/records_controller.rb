@@ -91,7 +91,7 @@ class RecordsController < ApplicationController
     recs = query_dns @record, true
     rec = recs[params[:hash]]
     if rec
-      val = rec.value.is_a?(Array) ? rec.value.join(' ') : rec.value
+      val = rec.value.is_a?(Array) ? merge_values(rec) : rec.value
       update_dns [:delete, rec.domain, rec.type.to_s, val]
     end
     @record.destroy if recs.size <= 1
@@ -110,5 +110,15 @@ class RecordsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def record_params
       p = params.require(:record).permit(:subdomain, :domain, :ttl, :type, :value)
+    end
+
+    def merge_values rec
+      if rec.type == :TXT
+        rec.value.map { |v|
+          "\"#{v.gsub('"', '\\"')}\""
+        }.join(' ')
+      else
+        rec.value.join(' ')
+      end
     end
 end
