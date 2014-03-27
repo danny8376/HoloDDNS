@@ -35,15 +35,17 @@ class RecordsController < ApplicationController
     domain_exist = true
     invaild_input = false
     result = false
+
+    nsupdate = gen_dns_update params
+    if nsupdate.is_a? String
+      invaild_input = true
+      @record = Record.new
+      @record.errors[:base] = nsupdate
+    end
+
     unless @record
       @record = current_user.records.create(domain: domain)
       domain_exist = false
-    end
-    nsupdate = gen_dns_update params
-
-    if nsupdate.is_a? String
-      invaild_input = true
-      @record.errors[:base] = nsupdate
     end
 
     if invaild_input

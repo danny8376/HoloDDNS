@@ -5,6 +5,8 @@ module RecordsLib
 
   VAILD_TYPES = %w{A AAAA CNAME NS MX TXT SRV}
   SUBDOMAIN_PATTERN = '(((\\w[\\w-]*)?\\w\\.)((\\w[\\w-]*)?\\w\\.)*)?((\\w[\\w-]*)?\\w)'
+  SRV_SUBDOMAIN_PATTERN = '_[[:alnum:]]+\\._(tcp|udp)\\.([[:alnum:].]*)[[:alnum:]]'
+  STRICT_SUBDOMAIN_PATTERN = '((([[:alnum:]][[:alnum:]-]*)?[[:alnum:]]\\.)(([[:alnum:]][[:alnum:]-]*)?[[:alnum:]]\\.)*)?(([[:alnum:]][[:alnum:]-]*)?[[:alnum:]])'
 
   protected
 
@@ -88,9 +90,14 @@ module RecordsLib
 
   def gen_dns_update params
     return 'Invaild domain' unless AVAILABLE_DOMAINS.include? params[:domain].downcase
-    return 'Invaild subdomain' unless /^#{SUBDOMAIN_PATTERN}$/.match params[:subdomain]
+    #return 'Invaild subdomain' unless /^#{SUBDOMAIN_PATTERN}$/.match params[:subdomain]
     return 'Invaild TTL' unless /^\d+$/.match params[:ttl]
     return 'Invaild type' unless VAILD_TYPES.include? params[:type]
+    if params[:type] == 'SRV' # advance check for domain & types
+      return 'Invaild subdomain' unless /^#{SRV_SUBDOMAIN_PATTERN}$/.match params[:subdomain]
+    else
+      return 'Invaild subdomain' unless /^#{STRICT_SUBDOMAIN_PATTERN}$/.match params[:subdomain]
+    end
     domain = "#{params[:subdomain].downcase}.#{params[:domain].downcase}"
     ttl = params[:ttl].to_i
     type = params[:type].upcase
