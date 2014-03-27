@@ -79,6 +79,10 @@ Holoddns::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
 
+  # GA
+  GA.tracker = "UA-46955670-5"
+
+
 
   # Force SSL
   config.to_prepare { Devise::SessionsController.force_ssl }

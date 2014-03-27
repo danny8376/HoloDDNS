@@ -84,3 +84,7 @@ gem 'dalli'
 
 # Dalli with fiber settings
 gem 'connection_pool'
+
+# GA
+gem 'google-analytics-rails'
+
