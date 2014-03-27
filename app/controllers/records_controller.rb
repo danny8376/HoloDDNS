@@ -34,6 +34,7 @@ class RecordsController < ApplicationController
     @record = current_user.records.find_by(domain: domain)
     domain_exist = true
     invaild_input = false
+    result = false
     unless @record
       @record = current_user.records.create(domain: domain)
       domain_exist = false
@@ -45,8 +46,22 @@ class RecordsController < ApplicationController
       @record.errors[:base] = nsupdate
     end
 
+    if invaild_input
+      # failed directly
+    elsif domain_exist
+      # domain exists => update dns directly
+      result = update_dns nsupdate
+      @record.errors[:base] = "DNS Failed" unless result
+    else
+      result = @record.save
+      if result
+        result = update_dns nsupdate
+        @record.errors[:base] = "DNS Failed" unless result
+      end
+    end
+
     respond_to do |format|
-      if not invaild_input and (domain_exist or @record.save) and (update_dns nsupdate)
+      if result
         format.html { redirect_to @record, notice: 'Record was successfully created.' }
         format.json { render action: 'show', status: :created, location: @record }
       else

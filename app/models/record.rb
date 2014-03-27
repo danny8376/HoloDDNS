@@ -1,4 +1,6 @@
 class Record < ActiveRecord::Base
+  include RecordsLib
+
   belongs_to :user
 
   validates_associated :user
@@ -9,4 +11,9 @@ class Record < ActiveRecord::Base
 
   # dummy fields for form_for
   attr_reader :subdomain, :ttl, :type, :value
+
+  def destroy
+    update_dns [:delete, domain]
+    super
+  end
 end
