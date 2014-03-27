@@ -6,10 +6,17 @@
         - @record.errors.full_messages.each do |message|
           li = message
 
-  /.field
-    = f.label :user_id
-    = f.number_field :user_id
   .field
     = f.label :domain
-    = f.text_field :domain
+    = f.text_field :subdomain, pattern: RecordsLib::SUBDOMAIN_PATTERN, maxlength: 32
+    = f.select :domain, AVAILABLE_DOMAINS
+  .field
+    = f.label :ttl
+    = f.number_field :ttl, min: 0, value: 3600
+  .field
+    = f.label :type
+    = f.select :type, RecordsLib::VAILD_TYPES
+  .field
+    = f.label :value
+    = f.text_field :value, required: true
   .actions = f.submit 'Save'

@@ -13,6 +13,6 @@ class DomainValidator < ActiveModel::Validator
     end
     sub = record.domain[0...-fdomain.size]
     record.errors[:domain] << "Invaild subdomain" unless sub.match /^[[:alnum:].-]+$/
-    record.errors[:domain] << "Invaild subdomain length" unless (2..32).include? sub.size
+    record.errors[:domain] << "Invaild subdomain length" unless (2..33).include? sub.size # 1~32
   end
 end

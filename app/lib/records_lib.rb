@@ -3,11 +3,14 @@ require 'base64'
 
 module RecordsLib
 
+  VAILD_TYPES = %w{A AAAA CNAME NS MX TXT SRV}
+  SUBDOMAIN_PATTERN = '(((\\w[\\w-]*)?\\w\\.)((\\w[\\w-]*)?\\w\\.)*)?((\\w[\\w-]*)?\\w)'
+
   protected
 
 
   # Do DNS Query
-  def query_dns records
+  def query_dns records, hash = false
     # record current fiber
     f = Fiber.current
 
@@ -19,10 +22,10 @@ module RecordsLib
 
     length = records.size
     count = 0
-    answers = []
+    answers = hash ? {} : []
 
     alldone = lambda do
-      answers.sort!
+      answers.sort! unless hash
       f.resume(answers)
     end
 
@@ -30,7 +33,16 @@ module RecordsLib
       resolver.query(rec.domain, Resolv::DNS::Resource::IN::ANY) do |response|
         count += 1
         if response.is_a? RubyDNS::Message and response.rcode == Resolv::DNS::RCode::NoError
-          answers += response.answer.map{|r| RecordWrapper.new rec.id, r}
+          if hash
+            response.answer.each do |r|
+              rw = RecordWrapper.new rec.id, r
+              answers[rw.hash] = rw
+            end
+          else
+            answers += response.answer.map{|r| RecordWrapper.new rec.id, r}
+          end
+        else
+          answers.push RecordWrapper.new rec.id, [rec.domain, 0, nil] unless hash
         end
         alldone.call if count == length
       end
@@ -45,6 +57,8 @@ module RecordsLib
   # records => [ record1, record2, ... ]
   def update_dns records
     f = Fiber.current
+
+    records = [records] unless records[0].is_a? Array
 
     zone = get_zone records[0][1]
     return false unless zone
@@ -69,6 +83,21 @@ module RecordsLib
     AVAILABLE_DOMAINS.each { |domain| return domain if record.end_with? domain }
     return nil
   end
+
+
+
+  def gen_dns_update params
+    return 'Invaild domain' unless AVAILABLE_DOMAINS.include? params[:domain].downcase
+    return 'Invaild subdomain' unless /^#{SUBDOMAIN_PATTERN}$/.match params[:subdomain]
+    return 'Invaild TTL' unless /^\d+$/.match params[:ttl]
+    return 'Invaild type' unless VAILD_TYPES.include? params[:type]
+    domain = "#{params[:subdomain].downcase}.#{params[:domain].downcase}"
+    ttl = params[:ttl].to_i
+    type = params[:type].upcase
+    value = params[:value]
+    [:add, domain, type, ttl, value]
+  end
+
 
 
 
@@ -125,6 +154,8 @@ module RecordsLib
         :TXT
       when IN::SRV
         :SRV
+      when NilClass
+        :NXDOMAIN
       else
         :UNKNOWN
       end
@@ -137,18 +168,18 @@ module RecordsLib
       when IN::CNAME, IN::NS
         record.name.to_s
       when IN::MX
-        [record.preference, record.exchange.to_s].inspect
+        [record.preference, record.exchange.to_s]
       when IN::TXT
-        record.strings.inspect
+        record.strings
       when IN::SRV
-        [record.priority, record.weight, record.port, record.target.to_s].inspect
+        [record.priority, record.weight, record.port, record.target.to_s]
       else
         nil
       end
     end
 
     def hash
-      hash_base = "#{@domain.downcase}|#{@type.to_s.upcase}|#{@value.inspect}"
+      hash_base = "#{@domain.downcase}|#{@type}|#{@value}"
       Base64.urlsafe_encode64(Digest::MD5.digest(hash_base)[4...10])
     end
 

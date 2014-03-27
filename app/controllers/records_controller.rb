@@ -9,7 +9,7 @@ class RecordsController < ApplicationController
   # GET /records.json
   def index
     records = current_user.records
-    @recs = query_dns(records).reject{|r| r.type == :UNKNOWN}
+    @recs = query_dns(records)#.reject{|r| r.type == :UNKNOWN}
   end
 
   # GET /records/1
@@ -29,10 +29,24 @@ class RecordsController < ApplicationController
   # POST /records
   # POST /records.json
   def create
-    @record = current_user.records.create(record_params)
+    params = record_params
+    domain = "#{params[:subdomain]}.#{params[:domain]}"
+    @record = current_user.records.find_by(domain: domain)
+    domain_exist = true
+    invaild_input = false
+    unless @record
+      @record = current_user.records.create(domain: domain)
+      domain_exist = false
+    end
+    nsupdate = gen_dns_update params
+
+    if nsupdate.is_a? String
+      invaild_input = true
+      @record.errors[:base] = nsupdate
+    end
 
     respond_to do |format|
-      if @record.save
+      if not invaild_input and (domain_exist or @record.save) and (update_dns nsupdate)
         format.html { redirect_to @record, notice: 'Record was successfully created.' }
         format.json { render action: 'show', status: :created, location: @record }
       else
@@ -59,8 +73,13 @@ class RecordsController < ApplicationController
   # DELETE /records/1
   # DELETE /records/1.json
   def destroy
-    recs = query_dns(@record)
-    @record.destroy if recs.size == 1
+    recs = query_dns @record, true
+    rec = recs[params[:hash]]
+    if rec
+      val = rec.value.is_a?(Array) ? rec.value.join(' ') : rec.value
+      update_dns [:delete, rec.domain, rec.type.to_s, val]
+    end
+    @record.destroy if recs.size <= 1
     respond_to do |format|
       format.html { redirect_to records_url }
       format.json { head :no_content }
@@ -75,6 +94,6 @@ class RecordsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def record_params
-      params.require(:record).permit(:domain, :type, :value)
+      p = params.require(:record).permit(:subdomain, :domain, :ttl, :type, :value)
     end
 end

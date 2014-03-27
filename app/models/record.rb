@@ -5,4 +5,8 @@ class Record < ActiveRecord::Base
   validates :domain, uniqueness: { case_sensitive: false }
 
   validates_with DomainValidator
+
+
+  # dummy fields for form_for
+  attr_reader :subdomain, :ttl, :type, :value
 end
