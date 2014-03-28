@@ -44,7 +44,7 @@ class RecordsController < ApplicationController
     end
 
     unless @record
-      @record = current_user.records.create(domain: domain)
+      @record = current_user.records.new(domain: domain)
       domain_exist = false
     end
 
