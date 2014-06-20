@@ -50,13 +50,10 @@ class RecordsController < ApplicationController
 
     if invaild_input
       # failed directly
-    elsif domain_exist
-      # domain exists => update dns directly
-      result = update_dns nsupdate
-      @record.errors[:base] = "DNS Failed" unless result
     else
-      result = @record.save
-      if result
+      # domain exists => skip recording new domain
+      result = domain_exist ? true : @record.save
+      if result # the following must be together (the above save may gen error)
         result = update_dns nsupdate
         @record.errors[:base] = "DNS Failed" unless result
       end
