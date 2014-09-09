@@ -1,0 +1,51 @@
+doctype html
+html
+head
+  meta charset="utf-8"
+  title Holoddns
+  == stylesheet_link_tag    "/stylesheets/application.css",
+                            media: "all"
+  == javascript_include_tag "/stylesheets/application.js"
+  //= analytics_init if Rails.env.production?
+  //= csrf_meta_tags
+body
+  nav.navbar.navbar-default.navbar-fixed-top role="navigation"
+    div.container
+      div.navbar-header
+        button.navbar-toggle type="button" data-toggle="collapse" data-target="#none"
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        == link_to "Holo DDns", "/", :class => 'navbar-brand'
+      div.collapse.navbar-collapse#none
+        ul.nav.navbar-nav#nav
+          li class=(nav_active "index")
+            == link_to I18n.t(:'mainview.home'), "/"
+          li class=(nav_active "records")
+            == link_to I18n.t(:'mainview.record'), "/records"
+        //p.navbar-text.pull-right
+          - if user_signed_in?
+            | Hello, 
+            = current_user.email
+            |  | 
+            == link_to "#{I18n.t :'deviseview.edittext'}#{current_user.class.model_name.human}", edit_user_registration_path, :class => 'navbar-link'
+            |  | 
+            == link_to I18n.t(:'deviseview.signout'), destroy_user_session_path, method: :delete, :class => 'navbar-link'
+          - else
+            == link_to I18n.t(:'deviseview.signup'), new_user_registration_path, :class => 'navbar-link'
+            |  | 
+            == link_to I18n.t(:'deviseview.signin'), new_user_session_path, :class => 'navbar-link'
+  div.container#mainwrap
+    //- if notice
+      p.alert.alert-info = notice
+    //- if alert
+      p.alert.alert-warning = alert
+    == yield
+  footer
+    div.container
+      | HoloDDNS By DannyAAM @_@
+      div.pull-right
+        select#locale
+          option value="zh-TW" selected=(current_locale? :"zh-TW") 繁體中文
+          option value="en" selected=(current_locale? :en) English(US)
