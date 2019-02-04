@@ -1,0 +1,13 @@
+name: HoloDDNS
+version: 0.1.0
+
+authors:
+  - DannyAAM <danny@saru.moe>
+
+targets:
+  HoloDDNS:
+    main: src/HoloDDNS.cr
+
+crystal: 0.27.0
+
+license: MIT
